@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vinhngo.share.flutter_stream_state_management">
+    package="com.example.flutter_example">
    <application
-        android:label="flutter_stream_state_management"
+        android:label="flutter_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
