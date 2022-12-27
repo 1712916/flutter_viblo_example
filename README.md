@@ -1,4 +1,4 @@
-# flutter_stream_state_management
+# flutter_example
 
 A new Flutter project.
 

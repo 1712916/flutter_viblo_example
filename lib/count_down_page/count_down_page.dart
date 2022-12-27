@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_stream_state_management/main.dart';
+import 'package:flutter_example/main.dart';
+
 
 import 'count_down_page_2.dart';
 
