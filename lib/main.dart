@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_stream_state_management/count_down_page/count_down_page.dart';
+import 'package:flutter_example/count_down_page/count_down_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Flutter Demo',
-      home: CountDownPage(seconds: 1000),
+      home: ExampleBoardPage(),
+    );
+  }
+}
+
+class ExampleBoardPage extends StatefulWidget {
+  const ExampleBoardPage({Key? key}) : super(key: key);
+
+  @override
+  _ExampleBoardPageState createState() => _ExampleBoardPageState();
+}
+
+class _ExampleBoardPageState extends State<ExampleBoardPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Board',
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                push(
+                  context,
+                  const CountDownPage(seconds: 1000),
+                );
+              },
+              child: const Text('Count Down'))
+        ],
+      ),
     );
   }
 }
