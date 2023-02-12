@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
+import 'package:flutter_example/scan_code_page/scan_code_page.dart';
+import 'package:flutter_zxing/flutter_zxing.dart';
 
 void main() {
+  zx.setLogEnabled(false);
+
   runApp(const MyApp());
 }
 
@@ -37,13 +41,23 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
         padding: const EdgeInsets.all(16),
         children: [
           ElevatedButton(
-              onPressed: () {
-                push(
-                  context,
-                  const CountDownPage(seconds: 1000),
-                );
-              },
-              child: const Text('Count Down'))
+            onPressed: () {
+              push(
+                context,
+                const CountDownPage(seconds: 1000),
+              );
+            },
+            child: const Text('Count Down'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              push(
+                context,
+                const QRViewExample(),
+              );
+            },
+            child: const Text('Scan Code'),
+          ),
         ],
       ),
     );
