@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/scan_code_page/scan_code_page.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
@@ -57,6 +58,16 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               );
             },
             child: const Text('Scan Code'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              runApp(
+                const MaterialApp(
+                  home: ContextPage(),
+                ),
+              );
+            },
+            child: const Text('Context Page'),
           ),
         ],
       ),
