@@ -17,15 +17,18 @@ dependencies:
   qr_code_scanner: ^1.0.1
   rxdart: ^0.27.7
   equatable: ^2.0.5
-
+  isar: ^3.0.5
 
   cupertino_icons: ^1.0.2
+  isar_flutter_libs: ^3.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  isar_generator: ^3.0.5
+  build_runner: ^2.3.3
 
 flutter:
 
