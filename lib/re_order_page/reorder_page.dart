@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reorderables/reorderables.dart';
 
 class ReOrderPage extends StatefulWidget {
   const ReOrderPage({Key? key}) : super(key: key);
@@ -22,68 +21,83 @@ class _ReOrderPageState extends State<ReOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      // body: Wrap(
-      //   runSpacing: 8,
-      //   spacing: 8,
-      //   children: List.generate(
-      //     texts.length,
-      //     (index) => DragTextWidget(
-      //       text: texts[index],
-      //       onAccept: (data) {
-      //         texts[index] = '${texts[index]} $data';
-      //         texts.remove(data);
-      //         setState(() {});
-      //       },
-      //     ),
-      //   ),
-      // ),
-      body: ReorderableWrap(
+      body: Wrap(
         runSpacing: 8,
         spacing: 8,
-        onReorder: (int oldIndex, int newIndex) {
-          setState(() {
-            texts.insert(newIndex, texts.removeAt(oldIndex));
-          });
-        },
-        children: texts
-            .map((e) => TextChip(
-                  text: e,
-          color: e == '___' ? Colors.cyan.shade200 : null,
-                ))
-            .toList(),
-        buildDraggableFeedback: (context, constraints, child) {
-          return child;
-        },
+        children: List.generate(
+          texts.length,
+          (index) => DragTextWidget(
+            text: texts[index],
+            onAccept: (data) {
+              texts[index] = '${texts[index]} $data';
+              texts.remove(data);
+              setState(() {});
+            },
+          ),
+        ),
       ),
+      // body: ReorderableWrap(
+      //   runSpacing: 8,
+      //   spacing: 8,
+      //   onReorder: (int oldIndex, int newIndex) {
+      //     setState(() {
+      //       texts.insert(newIndex, texts.removeAt(oldIndex));
+      //     });
+      //   },
+      //   children: texts
+      //       .map((e) => TextChip(
+      //             text: e,
+      //     color: e == '___' ? Colors.cyan.shade200 : null,
+      //           ))
+      //       .toList(),
+      //   buildDraggableFeedback: (context, constraints, child) {
+      //     return child;
+      //   },
+      // ),
     );
   }
 }
 
-class DragTextWidget extends StatelessWidget {
+class DragTextWidget extends StatefulWidget {
   const DragTextWidget({Key? key, required this.text, this.onAccept}) : super(key: key);
   final String text;
   final ValueChanged<String>? onAccept;
 
   @override
+  State<DragTextWidget> createState() => _DragTextWidgetState();
+}
+
+class _DragTextWidgetState extends State<DragTextWidget> {
+  bool isSelect = false;
+  @override
   Widget build(BuildContext context) {
-    return Draggable(
-      data: text,
-      feedback: Container(
-          constraints: BoxConstraints(
-            maxWidth: 300,
+    return GestureDetector(
+      onTap: () {
+        isSelect = !isSelect;
+        setState(() {});
+      },
+      child: Draggable(
+        data: widget.text,
+        feedback: Container(
+            constraints: BoxConstraints(
+              maxWidth: 300,
+            ),
+            child: TextChip(
+              text: widget.text,
+              color: Colors.cyanAccent.withOpacity(0.1),
+            )),
+        child: DragTarget(
+          onAccept: (String data) {
+            if (data == widget.text) {
+              return;
+            }
+            widget.onAccept?.call(data);
+          },
+          builder: (_, __, ___) => TextChip(
+            text: widget.text,
+            color: isSelect ? Colors.cyan : null,
           ),
-          child: TextChip(
-            text: text,
-            color: Colors.cyanAccent.withOpacity(0.1),
-          )),
-      child: DragTarget(
-        onAccept: (String data) {
-          if (data == text) {
-            return;
-          }
-          onAccept?.call(data);
-        },
-        builder: (_, __, ___) => TextChip(text: text),
+        ),
       ),
     );
   }
