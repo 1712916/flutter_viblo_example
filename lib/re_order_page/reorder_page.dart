@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reorderables/reorderables.dart';
 
 class ReOrderPage extends StatefulWidget {
   const ReOrderPage({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class ReOrderPage extends StatefulWidget {
 class _ReOrderPageState extends State<ReOrderPage> {
   String text = 'Draggable and DragTarget | Drag and Drop in Flutter';
 
-  late List<String> texts = text.split(' ');
+  late List<String> texts = text.split(' ')..add('___');
 
   @override
   void initState() {
@@ -21,20 +22,38 @@ class _ReOrderPageState extends State<ReOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Wrap(
+      // body: Wrap(
+      //   runSpacing: 8,
+      //   spacing: 8,
+      //   children: List.generate(
+      //     texts.length,
+      //     (index) => DragTextWidget(
+      //       text: texts[index],
+      //       onAccept: (data) {
+      //         texts[index] = '${texts[index]} $data';
+      //         texts.remove(data);
+      //         setState(() {});
+      //       },
+      //     ),
+      //   ),
+      // ),
+      body: ReorderableWrap(
         runSpacing: 8,
         spacing: 8,
-        children: List.generate(
-          texts.length,
-          (index) => DragTextWidget(
-            text: texts[index],
-            onAccept: (data) {
-              texts[index] = '${texts[index]} $data';
-              texts.remove(data);
-              setState(() {});
-            },
-          ),
-        ),
+        onReorder: (int oldIndex, int newIndex) {
+          setState(() {
+            texts.insert(newIndex, texts.removeAt(oldIndex));
+          });
+        },
+        children: texts
+            .map((e) => TextChip(
+                  text: e,
+          color: e == '___' ? Colors.cyan.shade200 : null,
+                ))
+            .toList(),
+        buildDraggableFeedback: (context, constraints, child) {
+          return child;
+        },
       ),
     );
   }
