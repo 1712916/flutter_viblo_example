@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
+import 'package:flutter_example/re_order_page/reorder_page.dart';
 import 'package:flutter_example/scan_code_page/scan_code_page.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 
@@ -75,6 +76,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, EmailPage());
             },
             child: const Text('Email Page'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, ReOrderPage());
+            },
+            child: const Text('Re Order Page'),
           ),
         ],
       ),
