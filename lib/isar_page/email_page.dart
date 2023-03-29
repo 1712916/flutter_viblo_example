@@ -24,7 +24,7 @@ class _EmailPageState extends State<EmailPage> {
   }
 
   void initIsar() async {
-    isar = await Isar.open([EmailSchema]);
+    isar = await Isar.open([EmailSchema, TeacherSchema, StudentSchema]);
     isInit = true;
   }
 
@@ -45,13 +45,25 @@ class _EmailPageState extends State<EmailPage> {
             ElevatedButton(
               onPressed: () async {
                 if (isInit) {
-                  Email email = Email()..email = textEditingController.text;
-                  await isar.writeTxn(() async {
-                    await isar.emails.put(email); // insert & update
-                  });
+                  // Email email = Email();
+                  // await isar.writeTxn(() async {
+                  //   await isar.emails.put(email); // insert & update
+                  // });
+                  //
+                  // collectionEmail = await isar.emails.where().findAll();
+                  // setState(() {});
 
-                  collectionEmail = await isar.emails.where().findAll();
-                  setState(() {});
+                  await isar.writeTxn(() async {
+                    final teacher = Teacher('VINH NGO');
+
+                    await isar.teachers.put(teacher);
+                    // final t = await isar.teachers.where().filter().idEqualTo(1).findFirst();
+                    // print('t: ${t?.name}');
+
+                    final s = Student('Vijnh222')..teacher.value = teacher;
+                    await isar.students.put(s);
+                    s.teacher.save();
+                  });
                 }
               },
               child: Text('add email'),
@@ -63,7 +75,7 @@ class _EmailPageState extends State<EmailPage> {
                         ?.map(
                           (e) => ListTile(
                             leading: Text(e.id.toString() ?? ''),
-                            title: Text(e.email ?? ''),
+                            title: Text(e.email ?? 'nnnnn'),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
