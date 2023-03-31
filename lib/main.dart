@@ -3,6 +3,7 @@ import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
 import 'package:flutter_example/re_order_page/reorder_page.dart';
+import 'package:flutter_example/remote_config_page/remote_config_page.dart';
 import 'package:flutter_example/scan_code_page/scan_code_page.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 
@@ -82,6 +83,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, ReOrderPage());
             },
             child: const Text('Re Order Page'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, RemoteConfigPage());
+            },
+            child: const Text('Remote Config Page'),
           ),
         ],
       ),

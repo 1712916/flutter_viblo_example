@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "340076779081",
+    "project_id": "viblo-example",
+    "storage_bucket": "viblo-example.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340076779081:android:d957418d21de0b6cdc9198",
+        "android_client_info": {
+          "package_name": "com.example.flutter_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340076779081-f7medtip0f1t6nsimgj3jcg8b2hn14ac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr_uBDFrLjxetwqIEqn-w4YfMqw04fr7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340076779081-f7medtip0f1t6nsimgj3jcg8b2hn14ac.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
