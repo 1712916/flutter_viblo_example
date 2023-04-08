@@ -43,7 +43,12 @@ class _PDAPageState extends State<PDAPage> {
 }
 
 class PDAWidget extends StatefulWidget {
-  const PDAWidget({Key? key, this.onChanged, this.onNotFound, this.child}) : super(key: key);
+  const PDAWidget({
+    Key? key,
+    this.onChanged,
+    this.onNotFound,
+    this.child,
+  }) : super(key: key);
 
   final ValueChanged<String>? onChanged;
   final VoidCallback? onNotFound;
@@ -67,7 +72,7 @@ class _PDAWidgetState extends State<PDAWidget> {
   @override
   void initState() {
     super.initState();
-    _streamSubscription = _subject.stream.debounceTime(const Duration(milliseconds: 100)).listen((code) {
+    _streamSubscription = _subject.stream.debounceTime(const Duration(milliseconds: 50)).listen((code) {
       if (code == _notFound) {
         log('[PDA SCAN LOG]: $_notFound');
         widget.onNotFound?.call();
@@ -96,7 +101,11 @@ class _PDAWidgetState extends State<PDAWidget> {
           case KeyDownEvent:
             {
               if (event.logicalKey.keyLabel.length == 1) {
-                _chars.write(event.logicalKey.keyLabel.characters.first);
+                if (event.character?.isNotEmpty ?? false) {
+                  _chars.write(event.character![0]);
+                } else {
+                  _chars.write(event.logicalKey.keyLabel.characters.first);
+                }
                 _subject.add(_chars.toString());
               }
               return;
