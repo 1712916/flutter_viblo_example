@@ -53,7 +53,7 @@ class _PDAPageState extends State<PDAPage> {
                 children: [
                   Text('Code: \n$value'),
                   //*add textfield here will hard to handle scan by pda
-                  TextField(),
+                  //TextField(),
                 ],
               ));
             },
