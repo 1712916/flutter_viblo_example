@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
+import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
 import 'package:flutter_example/pda_page/barcode_listener.dart';
 import 'package:flutter_example/pda_page/pda_page.dart';
@@ -104,7 +105,13 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
             },
             child: const Text('Barcode Listener Page'),
           ),
-        ],
+          ElevatedButton(
+            onPressed: () async {
+              push(context, DatePage());
+            },
+            child: const Text('Date Picker Page'),
+          ),
+        ].reversed.toList(),
       ),
     );
   }
