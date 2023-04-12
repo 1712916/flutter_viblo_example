@@ -111,6 +111,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
             },
             child: const Text('Date Picker Page'),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, MonthPage());
+            },
+            child: const Text('Month Picker Page'),
+          ),
         ].reversed.toList(),
       ),
     );
