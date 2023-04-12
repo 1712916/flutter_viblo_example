@@ -34,6 +34,22 @@ class _PDAPageState extends State<PDAPage> {
         focusNode?.requestFocus();
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Column(
+                  children: [
+                    TextField(),
+                  ],
+                );
+              },
+            ).then((value) {
+              FocusManager.instance.primaryFocus?.previousFocus();
+            });
+          },
+        ),
         body: PDAWidget(
           getFocusNode: (f) {
             focusNode = f;
@@ -79,6 +95,7 @@ class PDAWidget extends StatefulWidget {
     this.onNotFound,
     this.child,
     this.getFocusNode,
+    this.autoFocus = true,
   }) : super(key: key);
 
   ///listen barcode change
@@ -92,6 +109,8 @@ class PDAWidget extends StatefulWidget {
 
   ///get focus node to handle from external
   final Function(FocusNode focusNode)? getFocusNode;
+
+  final bool autoFocus;
 
   @override
   State<PDAWidget> createState() => _PDAWidgetState();
@@ -127,6 +146,10 @@ class _PDAWidgetState extends State<PDAWidget> {
         widget.onChanged?.call(code);
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   @override
@@ -140,9 +163,8 @@ class _PDAWidgetState extends State<PDAWidget> {
   @override
   Widget build(BuildContext context) {
     //focus here to ensure KeyboardListener is focus
-    _focusNode.requestFocus();
+    //_focusNode.requestFocus();
     return KeyboardListener(
-      autofocus: true,
       focusNode: _focusNode,
       onKeyEvent: (KeyEvent event) {
         switch (event.runtimeType) {
