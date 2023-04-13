@@ -14,6 +14,22 @@ class _BarcodeListenerPageState extends State<BarcodeListenerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Column(
+                children: [
+                  TextField(),
+                ],
+              );
+            },
+          ).then((value) {
+            FocusManager.instance.primaryFocus?.previousFocus();
+          });
+        },
+      ),
       body: Column(
         children: [
           BarcodeKeyboardListener(
