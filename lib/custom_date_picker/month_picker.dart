@@ -153,6 +153,7 @@ class _MonthPickerState extends State<MonthPicker> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
+                                color: isEnable(index + 1) ? null : Colors.grey.shade300,
                               ),
                             ),
                           ),

@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 
 class CustomYearPicker extends StatefulWidget {
-  const CustomYearPicker({Key? key, this.initYear}) : super(key: key);
+  CustomYearPicker({Key? key, this.initYear, this.startYear, this.endYear}) : super(key: key) {
+    if (initYear != null) {
+      assert(initYear! >= 0, 'initYear >= 0');
+    }
+
+    if (endYear != null && startYear != null) {
+      assert(endYear! > 0, 'endYear >= 0');
+    } else if (startYear != null) {
+      assert(startYear! > 0, 'startYear >= 0');
+    } else if (endYear != null) {
+      assert(endYear! > 0, 'endYear >= 0');
+    }
+  }
 
   final int? initYear;
+  final int? startYear;
+  final int? endYear;
 
   @override
   State<CustomYearPicker> createState() => _CustomYearPickerState();
@@ -29,6 +43,22 @@ class _CustomYearPickerState extends State<CustomYearPicker> {
   final controller = ScrollController();
 
   final crossAxisCount = 3;
+
+  bool isEnable(int y) {
+    if (widget.startYear != null) {
+      if (widget.startYear! > y) {
+        return false;
+      }
+    }
+
+    if (widget.endYear != null) {
+      if (widget.endYear! < y) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   @override
   void initState() {
@@ -100,10 +130,12 @@ class _CustomYearPickerState extends State<CustomYearPicker> {
                       childAspectRatio: 2 / 1,
                     ),
                     itemBuilder: (_, index) => GestureDetector(
-                      onTap: () {
-                        selectYear = index;
-                        setState(() {});
-                      },
+                      onTap: isEnable(index + 1)
+                          ? () {
+                              selectYear = index;
+                              setState(() {});
+                            }
+                          : null,
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -117,6 +149,7 @@ class _CustomYearPickerState extends State<CustomYearPicker> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
+                            color: isEnable(index + 1) ? null : Colors.grey.shade300,
                           ),
                         ),
                       ),
