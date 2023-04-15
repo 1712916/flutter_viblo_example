@@ -141,3 +141,51 @@ mixin LoadingMixin<T extends StatefulWidget, S> on State<T> {
     );
   }
 }
+
+class LoadingWidget<S> extends StatefulWidget {
+  const LoadingWidget({
+    Key? key,
+    required this.initList,
+    required this.onRefresh,
+    required this.onLoadMore,
+    required this.builder,
+    required this.canLoadMore,
+  }) : super(key: key);
+
+  final List<S> initList;
+  final Future<List<S>> Function() onRefresh;
+  final Future<List<S>> Function() onLoadMore;
+  final Widget Function(S item) builder;
+  final bool Function() canLoadMore;
+
+  @override
+  State<LoadingWidget<S>> createState() => _LoadingWidgetState<S>();
+}
+
+class _LoadingWidgetState<S> extends State<LoadingWidget<S>> with LoadingMixin<LoadingWidget<S>, S> {
+  @override
+  void initState() {
+    super.initState();
+    addInitList(widget.initList);
+  }
+
+  @override
+  void didUpdateWidget(covariant LoadingWidget<S> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initList != widget.initList) {
+      replace(widget.initList);
+    }
+  }
+
+  @override
+  Future<List<S>> onRefresh() => widget.onRefresh();
+
+  @override
+  Future<List<S>> onLoadMore() => widget.onLoadMore();
+
+  @override
+  Widget builder(S item) => widget.builder(item);
+
+  @override
+  bool canLoadMore() => widget.canLoadMore();
+}
