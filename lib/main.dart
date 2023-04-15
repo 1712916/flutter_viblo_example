@@ -3,6 +3,7 @@ import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
+import 'package:flutter_example/loading_page/loading_page.dart';
 import 'package:flutter_example/pda_page/barcode_listener.dart';
 import 'package:flutter_example/pda_page/pda_page.dart';
 import 'package:flutter_example/re_order_page/reorder_page.dart';
@@ -122,6 +123,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, YearPage());
             },
             child: const Text('Year Picker Page'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, LoadingPage());
+            },
+            child: const Text('Loading Page'),
           ),
         ].reversed.toList(),
       ),
