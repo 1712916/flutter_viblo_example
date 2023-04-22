@@ -9,6 +9,7 @@ import 'package:flutter_example/pda_page/pda_page.dart';
 import 'package:flutter_example/re_order_page/reorder_page.dart';
 import 'package:flutter_example/remote_config_page/remote_config_page.dart';
 import 'package:flutter_example/scan_code_page/scan_code_page.dart';
+import 'package:flutter_example/task_runner/task_runner_page.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 
 void main() {
@@ -129,6 +130,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, LoadingPage());
             },
             child: const Text('Loading Page'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, TaskRunnerPage());
+            },
+            child: const Text('Task Runner Page'),
           ),
         ].reversed.toList(),
       ),
