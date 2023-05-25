@@ -34,7 +34,7 @@ class _ScrollHideBottomPageState extends State<ScrollHideBottomPage> with Scroll
         height: 105,
         color: Colors.primaries[index % 8],
       ),
-      itemCount: 7,
+      //itemCount: 7,
     );
   }
 }
