@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_example/app_life_cycle/app_life_cycle_page.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
@@ -25,9 +26,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: ExampleBoardPage(),
+      home: const ExampleBoardPage(),
+      navigatorObservers: [
+        AppLifeCycleMixin.routeObserver,
+      ],
     );
   }
 }
@@ -150,6 +154,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, ScrollHideBottomPage());
             },
             child: const Text('Scroll Hide Bottom'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, RouteAwareWidget());
+            },
+            child: const Text('App Life Cycle'),
           ),
         ].reversed.toList(),
       ),
