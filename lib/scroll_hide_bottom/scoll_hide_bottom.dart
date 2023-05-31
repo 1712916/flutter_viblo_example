@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class ScrollHideBottomPage extends StatefulWidget {
   const ScrollHideBottomPage({Key? key}) : super(key: key);
@@ -41,6 +42,7 @@ class _ScrollHideBottomPageState extends State<ScrollHideBottomPage> with Scroll
 
 class ScrollListener extends ChangeNotifier {
   double bottom = 0;
+
   double _last = 0;
 
   double height = 0;
@@ -80,7 +82,11 @@ class ScrollListener extends ChangeNotifier {
 mixin ScrollHideBottomBar<T extends StatefulWidget> on State<T> {
   final GlobalKey _key = GlobalKey();
 
+  final GlobalKey<_AnimationBottomState> _animationKey = GlobalKey();
+
   final ScrollListener _model = ScrollListener.initialise();
+
+  void onBottomHeightChanged(double height) {}
 
   @override
   void initState() {
@@ -90,6 +96,7 @@ mixin ScrollHideBottomBar<T extends StatefulWidget> on State<T> {
         final box = _key.currentContext?.findRenderObject() as RenderBox?;
         if (box != null) {
           _model.height = box.size.height;
+          onBottomHeightChanged(_model.height);
         }
       } catch (e) {}
     });
@@ -106,7 +113,15 @@ mixin ScrollHideBottomBar<T extends StatefulWidget> on State<T> {
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification.metrics.axis == Axis.vertical) {
-          _model.updatePosition(notification.metrics.pixels);
+          if (notification is ScrollUpdateNotification) {
+            if ((notification.scrollDelta ?? 0) >= 0) {
+              _animationKey.currentState?.setBottom(-_model.height);
+            } else {
+              _animationKey.currentState?.setBottom(0);
+            }
+          }
+        } else {
+          _animationKey.currentState?.showBottom();
         }
 
         return true;
@@ -114,16 +129,8 @@ mixin ScrollHideBottomBar<T extends StatefulWidget> on State<T> {
       child: Stack(
         children: [
           buildScroll(),
-          AnimatedBuilder(
-            animation: _model,
-            builder: (context, child) {
-              return Positioned(
-                bottom: _model.bottom,
-                left: 0,
-                right: 0,
-                child: child!,
-              );
-            },
+          _AnimationBottom(
+            key: _animationKey,
             child: SizedBox(
               key: _key,
               child: buildBottomBar(),
@@ -137,4 +144,56 @@ mixin ScrollHideBottomBar<T extends StatefulWidget> on State<T> {
   Widget buildScroll();
 
   Widget buildBottomBar();
+}
+
+class _AnimationBottom extends StatefulWidget {
+  const _AnimationBottom({Key? key, required this.child}) : super(key: key);
+
+  final Widget child;
+
+  @override
+  State<_AnimationBottom> createState() => _AnimationBottomState();
+}
+
+class _AnimationBottomState extends State<_AnimationBottom> {
+  final StreamController<double> _streamController = StreamController();
+
+  late StreamSubscription _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = _streamController.stream.distinct().listen((bottom) {
+      _bottom = bottom;
+      setState(() {});
+    });
+  }
+
+  double _bottom = 0;
+
+  void setBottom(double bottomHeight) {
+    _streamController.add(bottomHeight);
+  }
+
+  void showBottom() {
+    _streamController.add(0);
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _streamController.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 200),
+      bottom: _bottom,
+      left: 0,
+      right: 0,
+      child: widget.child,
+    );
+  }
 }
