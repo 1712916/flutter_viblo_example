@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -5,28 +6,45 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-Future<XFile?> isolateCompressImage(ImageCompressModel a) {
-  return CompressImageUtil().compressAndGetFile(a.file, a.targetPath);
+/*
+* https://api.dart.dev/stable/2.18.3/dart-isolate/SendPort/send.html
+* sendPort và ReceivePort chỉ nhận được 1 số loại dữ liệu nên Chuyển từ custom object (class) -> Map và response type is String
+* */
+
+Future<String?> isolateCompressImage(String data) {
+  Map a = jsonDecode(data);
+  return CompressImageUtil(maxSize: 1024).compressAndGetFile(a['sourcePath'], a['targetPath'], quality: a['quality']);
 }
 
 class ImageCompressModel {
-  final File file;
+  final String sourcePath;
   final String targetPath;
+  final int quality;
 
-  ImageCompressModel(this.file, this.targetPath);
+  const ImageCompressModel(this.sourcePath, this.targetPath, this.quality);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'sourcePath': sourcePath,
+      'targetPath': targetPath,
+      'quality': quality,
+    };
+  }
 }
 
 class CompressImageUtil {
-  CompressImageUtil({this.showLog = true});
+  CompressImageUtil({this.showLog = true, this.maxSize = 1024 * 1000});
 
   ///[showLog] show log size before and after image is compressed
   bool showLog;
 
   ///[maxSize] is bytes
   ///1024 * 1000 bytes -> 1 MB
-  int maxSize = 1024 * 1000;
+  int maxSize;
 
-  Future<XFile?> compressAndGetFile(File file, String targetPath, {int quality = 90}) async {
+  Future<String?> compressAndGetFile(String sourcePath, String targetPath, {int quality = 90}) async {
+    File file = File(sourcePath);
+
     int fileSize = file.lengthSync();
     try {
       XFile? result;
@@ -46,7 +64,7 @@ class CompressImageUtil {
         log('file compress size: ${await result?.length()}');
       }
 
-      return result;
+      return result?.path;
     } catch (e) {
       log('$runtimeType: ${e.toString()}');
       rethrow;
