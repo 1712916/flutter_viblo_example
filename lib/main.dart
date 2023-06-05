@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_example/app_life_cycle/app_life_cycle_page.dart';
+import 'package:flutter_example/compress_image/compress_image_page.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
@@ -160,6 +161,12 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
               push(context, RouteAwareWidget());
             },
             child: const Text('App Life Cycle'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              push(context, CompressImagePage());
+            },
+            child: const Text('Compress Image Page'),
           ),
         ].reversed.toList(),
       ),
