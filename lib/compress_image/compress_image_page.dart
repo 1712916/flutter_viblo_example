@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_example/compress_image/image_util.dart';
@@ -40,16 +42,16 @@ class _CompressImagePageState extends State<CompressImagePage> {
                     isolateCompressImage, ImageCompressModel(file, targetPath));
 
                 if (compressFile != null) {
-                  compressPath = targetPath;
+                  compressPath = compressFile.path;
                   setState(() {});
                 }
               }
 
-              Future.wait([for (int i = 1; i < 10; i++) testCompress()]);
+              await Future.wait([for (int i = 1; i < 10; i++) testCompress()]);
             },
           ),
           const SizedBox(height: 10),
-          Image.asset(compressPath),
+          if (compressPath.isNotEmpty) Image.file(File(compressPath)),
         ],
       ),
     );

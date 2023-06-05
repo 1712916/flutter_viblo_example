@@ -17,8 +17,10 @@ class ImageCompressModel {
 }
 
 class CompressImageUtil {
+  CompressImageUtil({this.showLog = true});
+
   ///[showLog] show log size before and after image is compressed
-  bool showLog = true;
+  bool showLog;
 
   ///[maxSize] is bytes
   ///1024 * 1000 bytes -> 1 MB
@@ -27,15 +29,17 @@ class CompressImageUtil {
   Future<XFile?> compressAndGetFile(File file, String targetPath, {int quality = 90}) async {
     int fileSize = file.lengthSync();
     try {
-      if (fileSize <= maxSize) {
-        return XFile(file.path);
-      }
+      XFile? result;
 
-      var result = await FlutterImageCompress.compressAndGetFile(
-        file.path,
-        targetPath,
-        quality: quality,
-      );
+      if (fileSize <= maxSize) {
+        result = XFile((await file.copy(targetPath)).path);
+      } else {
+        result = await FlutterImageCompress.compressAndGetFile(
+          file.path,
+          targetPath,
+          quality: quality,
+        );
+      }
 
       if (showLog) {
         log('file size: $fileSize');
