@@ -5,17 +5,36 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:flutter_isolate/flutter_isolate.dart' as flutter_isolate;
+
+Future<String> getRandomImagePath() async {
+  final dir = await path_provider.getTemporaryDirectory();
+  return '${dir.absolute.path}/${DateTime.now().toIso8601String()}.jpg';
+}
 
 /*
 * https://api.dart.dev/stable/2.18.3/dart-isolate/SendPort/send.html
 * sendPort và ReceivePort chỉ nhận được 1 số loại dữ liệu nên Chuyển từ custom object (class) -> Map và response type is String
 * */
+@pragma('vm:entry-point')
+Future<String?> isolateCompressImage(ImageCompressModel imageCompressModel) {
+  final message = jsonEncode(imageCompressModel.toJson());
 
-Future<String?> isolateCompressImage(String data) {
-  Map a = jsonDecode(data);
-  return CompressImageUtil(maxSize: 1024).compressAndGetFile(a['sourcePath'], a['targetPath'], quality: a['quality']);
+  return flutter_isolate.flutterCompute<String?, String>(compressImage, message);
 }
 
+@pragma('vm:entry-point')
+Future<String?> compressImage(String data) {
+  Map imageCompressJson = jsonDecode(data);
+
+  return CompressImageUtil(maxSize: 1024).compressAndGetFile(
+    imageCompressJson['sourcePath'],
+    imageCompressJson['targetPath'],
+    quality: imageCompressJson['quality'],
+  );
+}
+
+@pragma('vm:entry-point')
 class ImageCompressModel {
   final String sourcePath;
   final String targetPath;
@@ -46,6 +65,7 @@ class CompressImageUtil {
     File file = File(sourcePath);
 
     int fileSize = file.lengthSync();
+
     try {
       XFile? result;
 
@@ -55,7 +75,7 @@ class CompressImageUtil {
         result = await FlutterImageCompress.compressAndGetFile(
           file.path,
           targetPath,
-          quality: quality,
+          quality: calculateTargetQuality(fileSize, defaultResizeQuality: quality),
         );
       }
 
@@ -69,6 +89,16 @@ class CompressImageUtil {
       log('$runtimeType: ${e.toString()}');
       rethrow;
     }
+  }
+
+  int calculateTargetQuality(int fileSize, {int defaultResizeQuality = 90}) {
+    if (fileSize <= maxSize) {
+      return defaultResizeQuality;
+    }
+
+    int percent = (100 * (1 - (maxSize / fileSize))).round();
+
+    return (percent - 10) > 0 ? percent - 10 : percent;
   }
 }
 

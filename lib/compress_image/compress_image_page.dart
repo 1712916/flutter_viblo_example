@@ -67,14 +67,13 @@ class _CompressImagePageState extends State<CompressImagePage> {
       loading = true;
       setState(() {});
 
-      final dir = await path_provider.getTemporaryDirectory();
-
       var file = await AssetImageToFile().getImageFileFromAssets(filePath);
 
-      final targetPath = '${dir.absolute.path}/temp.jpg';
+      final targetPath = await getRandomImagePath();
+
       final message = jsonEncode(ImageCompressModel(file.path, targetPath, currentSliderValue.round()).toJson());
 
-      final compressFilePath = await flutter_isolate.flutterCompute<String?, String>(isolateCompressImage, message);
+      final compressFilePath = await flutter_isolate.flutterCompute<String?, String>(compressImage, message);
 
       loading = false;
       setState(() {});
