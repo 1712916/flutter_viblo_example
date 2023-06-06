@@ -2,24 +2,18 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 
-class UploadImageUtil extends ChangeNotifier implements ImageStorageCenter {
-  UploadImageUtil._();
-
-  static final UploadImageUtil _i = UploadImageUtil._();
-
-  factory UploadImageUtil() => _i;
-
-  final ImageStorageCenter _center = _ImageStorageCenter();
+class UploadImageObserver<T> extends ChangeNotifier implements ImageStorageCenter<T> {
+  final ImageStorageCenter<T> _center = _ImageStorageCenter<T>();
 
   final Queue<String> _processQueue = Queue();
 
-  MappingImage _mappingImage = DefaultMappingImage();
+  MappingImage<T> _mappingImage = DefaultMappingImage<T>();
 
   bool _isSending = false;
 
   bool get isInProcess => _isSending;
 
-  void setMappingMethod(MappingImage mappingImage) {
+  void setMappingMethod(MappingImage<T> mappingImage) {
     _mappingImage = mappingImage;
   }
 
@@ -40,7 +34,7 @@ class UploadImageUtil extends ChangeNotifier implements ImageStorageCenter {
       while (_processQueue.isNotEmpty) {
         final path = _processQueue.removeFirst();
         if (!checkPath(path)) {
-          final String? mappingPath = await _mappingImage.getImage(path);
+          final T? mappingPath = await _mappingImage.getImage(path);
           if (mappingPath != null) {
             setPath(path, mappingPath);
           }
@@ -62,39 +56,33 @@ class UploadImageUtil extends ChangeNotifier implements ImageStorageCenter {
   }
 
   @override
-  String? getPath(String localPath) {
+  T? getPath(String localPath) {
     return _center.getPath(localPath);
   }
 
   @override
-  void setPath(String localPath, String remotePath) {
+  void setPath(String localPath, T remotePath) {
     _center.setPath(localPath, remotePath);
   }
 
   @override
-  Map<String, String> getPaths() {
+  Map<String, T> getPaths() {
     return _center.getPaths();
   }
 }
 
-class _ImageStorageCenter extends ImageStorageCenter {
-  _ImageStorageCenter._();
-
-  static final _ImageStorageCenter _i = _ImageStorageCenter._();
-
-  factory _ImageStorageCenter() => _i;
-
+class _ImageStorageCenter<T> extends ImageStorageCenter<T> {
   //<LocalPath, RemotePath>
-  final Map<String, String> _mapping = {};
+  final Map<String, T> _mapping = {};
 
   @override
-  String? getPath(String localPath) => _mapping[localPath];
+  T? getPath(String localPath) => _mapping[localPath];
 
   @override
   bool checkPath(String localPath) => getPath(localPath) != null;
 
   @override
-  void setPath(String localPath, String remotePath) {
+  void setPath(String localPath, T remotePath) {
     _mapping[localPath] = remotePath;
   }
 
@@ -104,35 +92,35 @@ class _ImageStorageCenter extends ImageStorageCenter {
   }
 
   @override
-  Map<String, String> getPaths() {
+  Map<String, T> getPaths() {
     return _mapping;
   }
 }
 
-abstract class ImageStorageCenter {
-  String? getPath(String localPath);
+abstract class ImageStorageCenter<T> {
+  T? getPath(String localPath);
 
   bool checkPath(String localPath);
 
-  void setPath(String localPath, String remotePath);
+  void setPath(String localPath, T remotePath);
 
   void clear();
 
-  Map<String, String> getPaths();
+  Map<String, T> getPaths();
 }
 
-abstract class MappingImage {
-  Future<String?> getImage(String path);
+abstract class MappingImage<T> {
+  Future<T?> getImage(String path);
 }
 
-class DefaultMappingImage extends MappingImage {
+class DefaultMappingImage<T> extends MappingImage<T> {
   @override
-  Future<String?> getImage(String path) {
+  Future<T?> getImage(String path) {
     throw UnimplementedError();
   }
 }
 
-class IsolateMappingImage extends MappingImage {
+class IsolateMappingImage extends MappingImage<String> {
   static Future<String?> uploadImage(String path) async {
     if (path == 'localPath_1') {
       return null;
@@ -140,10 +128,9 @@ class IsolateMappingImage extends MappingImage {
     await Future.delayed(Duration(seconds: 2));
     return 'remotePath_of_$path';
   }
+
   @override
   Future<String?> getImage(String path) {
     return compute<String, String?>(uploadImage, path);
   }
 }
-
-

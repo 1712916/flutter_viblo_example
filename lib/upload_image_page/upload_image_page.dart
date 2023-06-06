@@ -11,7 +11,7 @@ class UploadImagePage extends StatefulWidget {
 }
 
 class _UploadImagePageState extends State<UploadImagePage> {
-  UploadImageUtil uploadImageUtil = UploadImageUtil()..setMappingMethod(IsolateMappingImage());
+  UploadImageObserver<String> uploadImageUtil = UploadImageObserver()..setMappingMethod(IsolateMappingImage());
 
   @override
   void initState() {
