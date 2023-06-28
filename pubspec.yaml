@@ -30,6 +30,7 @@ dependencies:
   path_provider: ^2.0.15
   flutter_isolate: ^2.0.4
   cached_network_image: ^3.2.3
+  storybook_flutter: ^0.12.0
 
 dev_dependencies:
   flutter_test:

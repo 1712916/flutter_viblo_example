@@ -16,6 +16,7 @@ import 'package:flutter_example/scroll_hide_bottom/scoll_hide_bottom.dart';
 import 'package:flutter_example/task_runner/task_runner_page.dart';
 import 'package:flutter_example/upload_image_page/upload_image_page.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
+import 'package:storybook_flutter/storybook_flutter.dart';
 
 void main() {
   zx.setLogEnabled(false);
@@ -38,6 +39,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
+final _plugins = initializePlugins(
+  contentsSidePanel: true,
+  knobsSidePanel: true,
+  initialDeviceFrameData: DeviceFrameData(
+    device: Devices.ios.iPhone13,
+  ),
+);
+
 class ExampleBoardPage extends StatefulWidget {
   const ExampleBoardPage({Key? key}) : super(key: key);
 
@@ -46,135 +55,76 @@ class ExampleBoardPage extends StatefulWidget {
 }
 
 class _ExampleBoardPageState extends State<ExampleBoardPage> {
+  bool useStoryBook = false;
+
+  final List<Story> storyList = [
+    Story(name: 'Count Down', builder: (context) => const CountDownPage(seconds: 1000)),
+    Story(name: 'Scan Code', builder: (context) => const QRViewExample()),
+    Story(name: 'Context Page', builder: (context) => const ContextPage()),
+    Story(name: 'Email Page', builder: (context) => const EmailPage()),
+    Story(name: 'Re Order Page', builder: (context) => const ReOrderPage()),
+    Story(name: 'Remote Config Page', builder: (context) => const RemoteConfigPage()),
+    Story(name: 'PDA Page', builder: (context) => const PDAPage()),
+    Story(name: 'Barcode Listener Page', builder: (context) => const BarcodeListenerPage()),
+    Story(name: 'Date Picker Page', builder: (context) => const DatePage()),
+    Story(name: 'Month Picker Page', builder: (context) => const MonthPage()),
+    Story(name: 'Year Picker Page', builder: (context) => const YearPage()),
+    Story(name: 'Loading Page', builder: (context) => const LoadingPage()),
+    Story(name: 'Task Runner Page', builder: (context) => const TaskRunnerPage()),
+    Story(name: 'Upload Image Page', builder: (context) => const UploadImagePage()),
+    Story(name: 'Scroll Hide Bottom', builder: (context) => const ScrollHideBottomPage()),
+    Story(name: 'App Life Cycle', builder: (context) => const RouteAwareWidget()),
+    Story(name: 'Compress Image Page', builder: (context) => const CompressImagePage()),
+    Story(name: 'Cache Network Image Page', builder: (context) => const CachedNetworkImagePage()),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    if (useStoryBook) {
+      return Stack(
+        children: [
+          Storybook(
+            plugins: _plugins,
+            stories: storyList,
+          ),
+          Positioned(
+            right: 30,
+            bottom: 100,
+            child: FloatingActionButton(
+              child: const Text('Board'),
+              onPressed: () {
+                useStoryBook = false;
+                setState(() {});
+              },
+            ),
+          )
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Board',
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Text('Story Book'),
+        onPressed: () {
+          useStoryBook = true;
+          setState(() {});
+        },
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          ElevatedButton(
-            onPressed: () {
-              push(
-                context,
-                const CountDownPage(seconds: 1000),
-              );
-            },
-            child: const Text('Count Down'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              push(
-                context,
-                const QRViewExample(),
-              );
-            },
-            child: const Text('Scan Code'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              runApp(
-                const MaterialApp(
-                  home: ContextPage(),
-                ),
-              );
-            },
-            child: const Text('Context Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const EmailPage());
-            },
-            child: const Text('Email Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const ReOrderPage());
-            },
-            child: const Text('Re Order Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const RemoteConfigPage());
-            },
-            child: const Text('Remote Config Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const PDAPage());
-            },
-            child: const Text('PDA Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const BarcodeListenerPage());
-            },
-            child: const Text('Barcode Listener Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const DatePage());
-            },
-            child: const Text('Date Picker Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const MonthPage());
-            },
-            child: const Text('Month Picker Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const YearPage());
-            },
-            child: const Text('Year Picker Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const LoadingPage());
-            },
-            child: const Text('Loading Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const TaskRunnerPage());
-            },
-            child: const Text('Task Runner Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const UploadImagePage());
-            },
-            child: const Text('Upload Image Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const ScrollHideBottomPage());
-            },
-            child: const Text('Scroll Hide Bottom'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const RouteAwareWidget());
-            },
-            child: const Text('App Life Cycle'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, const CompressImagePage());
-            },
-            child: const Text('Compress Image Page'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              push(context, CachedNetworkImagePage());
-            },
-            child: const Text('Cache Network Image Page'),
-          ),
+          for (var story in storyList)
+            ElevatedButton(
+              onPressed: () async {
+                push(context, story.builder(context));
+              },
+              child: Text(story.name),
+            ),
         ].reversed.toList(),
       ),
     );
