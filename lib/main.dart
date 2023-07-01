@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_example/app_life_cycle/app_life_cycle_page.dart';
 import 'package:flutter_example/cached_network_image/cached_network_image_page.dart';
+import 'package:flutter_example/cancel_task_page/cancel_task_page.dart';
 import 'package:flutter_example/compress_image/compress_image_page.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
@@ -76,6 +77,7 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
     Story(name: 'App Life Cycle', builder: (context) => const RouteAwareWidget()),
     Story(name: 'Compress Image Page', builder: (context) => const CompressImagePage()),
     Story(name: 'Cache Network Image Page', builder: (context) => const CachedNetworkImagePage()),
+    Story(name: 'Cancel Task Page', builder: (context) => const CancelTaskPage()),
   ];
 
   @override
