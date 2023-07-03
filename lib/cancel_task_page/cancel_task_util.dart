@@ -7,7 +7,7 @@ import 'dart:developer';
 class CancelTaskUtil {
   StreamSubscription? _streamSubscription;
 
-  void addTask(Stream stream, Function(dynamic event) onData, Function(dynamic err, StackTrace stackTrace) onError) {
+  void addTask<T>(Stream<T> stream, Function(T event) onData, Function(dynamic err, StackTrace stackTrace) onError) {
     _cancelTask();
 
     _streamSubscription = stream.listen(
