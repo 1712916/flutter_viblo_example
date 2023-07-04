@@ -6,6 +6,7 @@ import 'package:flutter_example/compress_image/compress_image_page.dart';
 import 'package:flutter_example/context_page/context_page.dart';
 import 'package:flutter_example/count_down_page/count_down_page.dart';
 import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
+import 'package:flutter_example/fetch_more_info_for_model/fetch_more_info_for_model_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
 import 'package:flutter_example/loading_page/loading_page.dart';
 import 'package:flutter_example/pda_page/barcode_listener.dart';
@@ -78,6 +79,7 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
     Story(name: 'Compress Image Page', builder: (context) => const CompressImagePage()),
     Story(name: 'Cache Network Image Page', builder: (context) => const CachedNetworkImagePage()),
     Story(name: 'Cancel Task Page', builder: (context) => const CancelTaskPage()),
+    Story(name: 'Fetch More Information', builder: (context) => const FetchMoreInfoForModelPage()),
   ];
 
   @override
