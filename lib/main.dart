@@ -9,6 +9,7 @@ import 'package:flutter_example/custom_date_picker/date_picker_page.dart';
 import 'package:flutter_example/fetch_more_info_for_model/fetch_more_info_for_model_page.dart';
 import 'package:flutter_example/isar_page/email_page.dart';
 import 'package:flutter_example/loading_page/loading_page.dart';
+import 'package:flutter_example/offset_example_page/offset_example_page.dart';
 import 'package:flutter_example/pda_page/barcode_listener.dart';
 import 'package:flutter_example/pda_page/pda_page.dart';
 import 'package:flutter_example/re_order_page/reorder_page.dart';
@@ -80,6 +81,7 @@ class _ExampleBoardPageState extends State<ExampleBoardPage> {
     Story(name: 'Cache Network Image Page', builder: (context) => const CachedNetworkImagePage()),
     Story(name: 'Cancel Task Page', builder: (context) => const CancelTaskPage()),
     Story(name: 'Fetch More Information', builder: (context) => const FetchMoreInfoForModelPage()),
+    Story(name: 'Offset Example Page', builder: (context) => const OffsetExamplePage()),
   ];
 
   @override
